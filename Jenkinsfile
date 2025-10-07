@@ -2,12 +2,23 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        stage('Checkout Source') {
             steps {
-                echo 'Hello World'
-              git branch: 'main', credentialsId: 'MyGitHub', url: 'https://github.com/BalajiGeetha/Jenkinspipeline'
+                git 'https://github.com/BalajiGeetha/BookManagementRestAssuredTestNgAuto.git'
             }
         }
+        stage('Build and Test') {
+            steps {
+                sh 'mvn clean test'
+            }
+        }
+        stage('Publish Test Results') {
+            steps {
+                sh 'allure generate allure-results --clean -o allure-report'
+                sh 'allure open allure-report'
+
+            }
+        }
+
     }
 }
-
